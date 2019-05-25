@@ -1,0 +1,11 @@
+void setup() {
+  size(700, 700);
+  background(250);
+}
+
+void draw() {
+  fill(0,0,255);
+  translate(width/2, height/2);
+  rotate(PI/3.0);
+  square(200, 200, 400);
+}
