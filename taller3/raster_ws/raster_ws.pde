@@ -97,15 +97,16 @@ void triangleRaster() {
   // here we convert v1 to illustrate the idea
   if (debug) {
     final int INIT = -int(pow(2, n)) / 2;
-    final int LIMIT = -INIT;
-    final int reposition = (width / (2 * LIMIT));
+    final int LIMIT = -INIT;    
+    final int reposition = (width / (2 * LIMIT));    
     final float area = edgeFunction(v1, v2, v3); 
-    println(area);
+    //println(area);
     float w0, w1, w2, r, g , b;
     Vector p;
     for (int i = INIT; i < LIMIT; i++) {      
       for (int j = INIT; j < LIMIT; j++) {
-        p = new Vector(i * reposition, j * reposition);
+        p = new Vector(reposition * (i + 0.5), reposition * (j + 0.5));
+                       
         w0 = edgeFunction(v1, v2, p);
         w1 = edgeFunction(v2, v3, p);
         w2 = edgeFunction(v3, v1, p);
@@ -113,7 +114,7 @@ void triangleRaster() {
           r = 255 * (w0 / area);
           g = 255 * (w1 / area);
           b = 255 * (w2 / area);
-          pushStyle();
+          pushStyle();          
           stroke(255, 255, 0, 0);
           fill(r, g, b);
           square(i, j, 1);
