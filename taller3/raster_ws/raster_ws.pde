@@ -62,7 +62,7 @@ void setup() {
 }
 
 void draw() {
-  background(0);
+  background(0);  
   stroke(0, 255, 0);
   if (gridHint)
     scene.drawGrid(scene.radius(), (int)pow(2, n));
@@ -71,7 +71,7 @@ void draw() {
   pushMatrix();
   pushStyle();
   scene.applyTransformation(node);
-  triangleRaster();
+  triangleRaster();  
   popStyle();
   popMatrix();
   
