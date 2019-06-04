@@ -17,6 +17,7 @@ int n = 4;
 boolean triangleHint = true;
 boolean gridHint = true;
 boolean debug = true;
+boolean antiAlia = true;
 
 // 3. Use FX2D, JAVA2D, P2D or P3D
 String renderer = JAVA2D;
@@ -90,6 +91,60 @@ boolean areNegative(float a, float b, float c) {
   return Float.compare(a, 0) <= 0 && Float.compare(b, 0) <= 0 && Float.compare(c, 0) <= 0;
 }
 
+int antiAlising(Vector p, int reposition, boolean positive){  
+  int subPixelsInTriangle = 0;
+  int delta = reposition/4;
+  Vector leftTop = new Vector(p.x()-delta, p.y()-delta);
+  Vector leftBottom = new Vector(p.x()-delta, p.y()+delta);
+  Vector rightTop = new Vector(p.x()+delta, p.y()-delta);
+  Vector rightBottom = new Vector(p.x()+delta, p.y()+delta);  
+  
+  float w0leftTop = edgeFunction(v1, v2, leftTop);
+  float w1leftTop = edgeFunction(v2, v3, leftTop);
+  float w2leftTop = edgeFunction(v3, v1, leftTop);
+  
+  float w0leftBottom = edgeFunction(v1, v2, leftBottom);
+  float w1leftBottom = edgeFunction(v2, v3, leftBottom);
+  float w2leftBottom = edgeFunction(v3, v1, leftBottom);
+  
+  float w0rightTop = edgeFunction(v1, v2, rightTop);
+  float w1rightTop = edgeFunction(v2, v3, rightTop);
+  float w2rightTop = edgeFunction(v3, v1, rightTop);
+  
+  float w0rightBottom = edgeFunction(v1, v2, rightBottom);
+  float w1rightBottom = edgeFunction(v2, v3, rightBottom);
+  float w2rightBottom = edgeFunction(v3, v1, rightBottom);
+  if(positive){
+    if(arePositive(w0leftTop,w1leftTop,w2leftTop)){
+     subPixelsInTriangle += 1.0;
+    }
+    if(arePositive(w0leftBottom,w1leftBottom,w2leftBottom)){
+     subPixelsInTriangle += 1.0;
+    }
+    if(arePositive(w0rightTop,w1rightTop,w2rightTop)){
+     subPixelsInTriangle += 1.0;
+    }
+    if(arePositive(w0rightBottom,w1rightBottom,w2rightBottom)){
+     subPixelsInTriangle += 1.0;
+    } 
+  }else{
+    if(areNegative(w0leftTop,w1leftTop,w2leftTop)){
+     subPixelsInTriangle += 1.0;
+    }
+    if(areNegative(w0leftBottom,w1leftBottom,w2leftBottom)){
+     subPixelsInTriangle += 1.0;
+    }
+    if(areNegative(w0rightTop,w1rightTop,w2rightTop)){
+     subPixelsInTriangle += 1.0;
+    }
+    if(areNegative(w0rightBottom,w1rightBottom,w2rightBottom)){
+     subPixelsInTriangle += 1.0;
+    }
+  }
+  
+  return subPixelsInTriangle*64;
+}
+
 // Implement this function to rasterize the triangle.
 // Coordinates are given in the node system which has a dimension of 2^n
 void triangleRaster() {
@@ -101,23 +156,30 @@ void triangleRaster() {
     final int reposition = (width / (2 * LIMIT));    
     final float area = edgeFunction(v1, v2, v3); 
     //println(area);
-    float w0, w1, w2, r, g , b;
+    float w0, w1, w2, r, g , b, alpha;
     Vector p;
     for (int i = INIT; i < LIMIT; i++) {      
       for (int j = INIT; j < LIMIT; j++) {
         p = new Vector(reposition * (i + 0.5), reposition * (j + 0.5));
-                       
+        
         w0 = edgeFunction(v1, v2, p);
         w1 = edgeFunction(v2, v3, p);
         w2 = edgeFunction(v3, v1, p);
-        if (arePositive(w0, w1, w2) || areNegative(w0, w1, w2)) {
+        
+        alpha = antiAlising(p,reposition,arePositive(w0, w1, w2));
+        
+        if (arePositive(w0, w1, w2) || areNegative(w0, w1, w2)) {  
+          
           r = 255 * (w0 / area);
           g = 255 * (w1 / area);
           b = 255 * (w2 / area);
           pushStyle();          
           stroke(255, 255, 0, 0);
-          fill(r, g, b);
-          square(i, j, 1);
+          if(antiAlia)
+            fill(r, g, b, alpha);
+          else
+            fill(r, g, b);
+          square(i, j, 1);          
           popStyle();
         }
       }
@@ -154,6 +216,8 @@ void keyPressed() {
     triangleHint = !triangleHint;
   if (key == 'd')
     debug = !debug;
+  if (key == 'a')
+    antiAlia = !antiAlia;
   if (key == '+') {
     n = n < 7 ? n+1 : 2;
     node.setScaling(width/pow( 2, n));
