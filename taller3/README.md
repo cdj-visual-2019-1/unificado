@@ -25,11 +25,23 @@ Complete la tabla:
 
 | Integrante | github nick |
 |------------|-------------|
-|            |             |
+| Jhon Torres | jhont285 |
+| Dago Fonseca | dagofonseca |
+| Camilo Pinzon | capinzonr |
 
 ## Discusión
 
 Describa los resultados obtenidos. En el caso de anti-aliasing describir las técnicas exploradas, citando las referencias.
+
+Se utilizaron cuatro muestras por pixel, para esto se dividió el pixel en cuatro subpixeles y se verificaba si el centro de los subpixeles se encontraban dentro el triángulo. Dependiendo del número de subpixeles que se encontrarán dentro del tiragulo se asignaba un valor alpha al color del pixel. Si todos los subpixeles se encuentran dentro del triangulo alpha tomaba el valor de 255, lo que significa una opacidad de 100% mientras que si ningun subpixel estaba dentro del triángulo alpha tomaba el valor de 0 lo que significa transparencia total.
+
+### Sin anti-aliazing.
+
+![noAtialiasing](/taller3/images/noAntialising.png)
+
+### Con anti-aliazing.
+
+![antialising](/taller3/images/antiAliasing.png)
 
 ## Entrega
 
