@@ -16,11 +16,10 @@ Complete la tabla:
 
 | Integrante | github nick |
 |------------|-------------|
-|            |             |
+| Jhon Torres | jhont285 |
+| Dago Fonseca | dagofonseca |
+| Camilo Pinzon | capinzonr |
 
-## Informe
-
-(elabore en este sección un informe del ejercicio realizado)
 
 ## Entrega
 
